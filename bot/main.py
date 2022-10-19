@@ -1,29 +1,104 @@
 import discord
 import os
+
+import requests
 from discord.ext import commands
 
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='titi ', intents=intents)
+bot = commands.Bot(command_prefix='sb ', intents=intents)
 
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user.name}({bot.user.id})')
+    print(f'{bot.user.name}({bot.user.id}) est prêt à foutre le bordel !')
 
 
+# ----------------------- ERROR ----------------------- #
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.reply("Vérifiez votre commande !")
+    else:
+        raise error
+# ----------------------- ERROR ----------------------- #
+
+
+# ------------------------- BAN ----------------------- #
 @bot.command()
-async def ping(ctx):
-    await ctx.send('pong')
+@commands.has_permissions(ban_members=False)
+async def ban(ctx, *, reason=None):
+    member = ctx.guild.get_member(ctx.message.author.id)
+    await member.ban(reason=reason)
+# ------------------------- BAN ----------------------- #
 
 
-@bot.command(name="coucou")
-async def coucou(ctx):
-    reponse = f"Ça va, {ctx.message.author.name} ?"
-    await ctx.reply(reponse)
-    print(f"Réponse à message {ctx.message.id} : {reponse}")
+# ------------------------ MUTE ----------------------- #
+@bot.command(name="mute")
+async def mute(ctx):
+    # récupération de l'utilisateur qui a déclenché la commande
+    member = ctx.guild.get_member(ctx.message.author.id)
+    # ajout du rôle muted à l'utilisateur
+    await member.edit(mute=True)
+# ------------------------ MUTE ----------------------- #
+
+
+# ---------------------- DOG PIC ---------------------- #
+@bot.command(name="dog")
+async def dog(ctx, breed=""):
+    # si l'utilisateur fourni une race
+    if breed:
+        api = 'https://dog.ceo/api/breed/' + breed + '/images/random'
+    else:
+        api = 'https://dog.ceo/api/breeds/image/random'
+    # récupération de la réponse
+    response = requests.get(f"{api}")
+    if response.status_code == 200:
+        await ctx.reply(response.json()["message"])
+    else:
+        response = "Pas de chien trouvé !"
+        await ctx.reply(response)
+# ---------------------- DOG PIC ---------------------- #
+
+
+# ----------------------- TRASH ----------------------- #
+@bot.command(name="trash")
+async def trash(ctx, member: discord.Member):
+    # lien vers l'API d'insultes
+    api = 'https://evilinsult.com/generate_insult.php?lang=fr&amp;type=json'
+    # création d'une insulte
+    response = requests.get(f"{api}")
+    if response.status_code == 200:
+        await ctx.reply(f'<@!{member.id}>, ' + response.text)
+    else:
+        response = "Aucune insulte trouvée !"
+        await ctx.reply(response)
+# ----------------------- TRASH ----------------------- #
+
+
+# ---------------------- RENAME ----------------------- #
+@bot.command(name="rename")
+async def rename(ctx, member: discord.Member, nickname):
+    # modification du nom de l'utilisateur
+    # par le nickname à l'envers (slice pos. -1)
+    await member.edit(nick=nickname[::-1])
+# ---------------------- RENAME ----------------------- #
+
+
+# -------------------- RACCOON PIC -------------------- #
+@bot.command(name="raccoon")
+async def dog(ctx):
+    api = "https://some-random-api.ml/animal/raccoon"
+    # récupération de la réponse
+    response = requests.get(f"{api}")
+    if response.status_code == 200:
+        await ctx.reply(response.json()['image'])
+    else:
+        response = "Pas de chien trouvé !"
+        await ctx.reply(response)
+# -------------------- RACCOON PIC -------------------- #
 
 
 if __name__ == '__main__':
