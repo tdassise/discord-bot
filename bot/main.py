@@ -89,16 +89,28 @@ async def rename(ctx, member: discord.Member, nickname):
 
 # -------------------- RACCOON PIC -------------------- #
 @bot.command(name="raccoon")
-async def dog(ctx):
+async def raccoon(ctx):
     api = "https://some-random-api.ml/animal/raccoon"
     # récupération de la réponse
     response = requests.get(f"{api}")
     if response.status_code == 200:
         await ctx.reply(response.json()['image'])
     else:
-        response = "Pas de chien trouvé !"
+        response = "Pas de blaireau trouvé !"
         await ctx.reply(response)
 # -------------------- RACCOON PIC -------------------- #
+
+
+@bot.command(name="meme")
+async def meme(ctx):
+    api = "https://api.humorapi.com/memes/random?api-key=5389761c3d1740da98c0cfcdc7fc7a7e"
+    # récupération de la réponse
+    response = requests.get(f"{api}")
+    if response.status_code == 200:
+        await ctx.reply(response.json()['url'])
+    else:
+        response = "Pas de meme trouvé !"
+        await ctx.reply(response)
 
 
 if __name__ == '__main__':
