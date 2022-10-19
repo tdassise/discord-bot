@@ -101,6 +101,7 @@ async def raccoon(ctx):
 # -------------------- RACCOON PIC -------------------- #
 
 
+# ----------------------- MEMES ----------------------- #
 @bot.command(name="meme")
 async def meme(ctx):
     api = "https://api.humorapi.com/memes/random?api-key=5389761c3d1740da98c0cfcdc7fc7a7e"
@@ -111,6 +112,7 @@ async def meme(ctx):
     elif response.status_code == 402:
         response = "Limite de memes mensuelle atteinte ! C'est de ta faute !"
         await ctx.reply(response)
+# ----------------------- MEMES ----------------------- #
 
 
 if __name__ == '__main__':
