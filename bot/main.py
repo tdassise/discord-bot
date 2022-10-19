@@ -108,8 +108,8 @@ async def meme(ctx):
     response = requests.get(f"{api}")
     if response.status_code == 200:
         await ctx.reply(response.json()['url'])
-    else:
-        response = "Pas de meme trouvé !"
+    elif response.status_code == 402:
+        response = "Limite de memes mensuelle atteinte ! C'est de ta faute !"
         await ctx.reply(response)
 
 
