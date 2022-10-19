@@ -1,4 +1,4 @@
-## Give a try to :
+# Give a try to :
     - sb ban {user} 
     - sb mute {user}
     - sb trash {user}
@@ -6,4 +6,4 @@
     - sb raccoon
     - sb rename {user} [nickname]
 
-# More to come !
+## More to come !
