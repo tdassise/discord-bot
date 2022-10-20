@@ -26,13 +26,13 @@ async def on_command_error(ctx, error):
 # ----------------------- ERROR ----------------------- #
 
 
-# ------------------------- BAN ----------------------- #
-@bot.command()
+# ----------------------- KICK ------------------------ #
+@bot.command(name="kick")
 @commands.has_permissions(ban_members=False)
-async def ban(ctx, *, reason=None):
+async def kick(ctx, *, reason=None):
     member = ctx.guild.get_member(ctx.message.author.id)
-    await member.ban(reason=reason)
-# ------------------------- BAN ----------------------- #
+    await member.kick(reason=reason)
+# ----------------------- KICK ------------------------ #
 
 
 # ------------------------ MUTE ----------------------- #
@@ -67,7 +67,7 @@ async def dog(ctx, breed=""):
 @bot.command(name="trash")
 async def trash(ctx, member: discord.Member):
     # lien vers l'API d'insultes
-    api = 'https://evilinsult.com/generate_insult.php?lang=fr&amp;type=json'
+    api = 'https://evilinsult.com/generate_insult.php?lang=frsb amp;type=json'
     # création d'une insulte
     response = requests.get(f"{api}")
     if response.status_code == 200:
@@ -113,6 +113,36 @@ async def meme(ctx):
         response = "Limite de memes mensuelle atteinte ! C'est de ta faute !"
         await ctx.reply(response)
 # ----------------------- MEMES ----------------------- #
+
+
+# ----------------------- HELP ------------------------ #
+@bot.remove_command("help")
+@bot.command(name="help")
+async def help(ctx):
+    # création d'une nouvelle embed
+    embed = discord.Embed(title="All commands")
+    # création du champ d'administration
+    embed.add_field(name="Administration",
+                    value="Mute : sb mute {user} \n"
+                          "Kick : sb kick {user} \n"
+                          "Rename : sb rename {user} [name]",
+                    inline=False)
+    # création du champ des images d'API
+    embed.add_field(name="Random pics",
+                    value="Dog : sb dog [breed] \n"
+                          "Meme : sb meme \n"
+                          "Raccoon : sb raccoon",
+                    inline=False)
+    # création du champ des commandes troll
+    embed.add_field(name="Others",
+                    value="Trash : sb trash {user}",
+                    inline=False)
+    # ajout du thumbnail
+    embed.set_thumbnail(url="https://i.imgur.com/KvjcO01.jpg")
+    embed.set_footer(text="Informations requested by {}".format(ctx.author.display_name))
+    # envoi du message
+    await ctx.send(embed=embed)
+# ----------------------- HELP ------------------------ #
 
 
 if __name__ == '__main__':
